@@ -12,7 +12,10 @@ def submit_analytics():
 
 @app.route("/")
 def index():
-    return render_template("index.tpl")
+    return render_template("base.tpl")
+
+@app.route("/login")
+    return render_template("login.tpl")
 
 if __name__ == "__main__":
     app.run(host='localhost', port=8080, debug=True)
