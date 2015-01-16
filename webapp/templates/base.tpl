@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>KillrAnalytics</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -51,7 +51,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+            <a class="navbar-brand" href="/">KillrAnalytics</a>
         </div>
         <!-- /.navbar-header -->
 
@@ -268,6 +268,7 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
+
                     <li class="sidebar-search">
                         <div class="input-group custom-search-form">
                             <input type="text" class="form-control" placeholder="Search...">
@@ -279,11 +280,14 @@
                         </div>
                         <!-- /input-group -->
                     </li>
+
                     <li>
                         <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                     </li>
+
+                    {#
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Live Stream<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="flot.html">Flot Charts</a>
@@ -294,6 +298,11 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    #}
+                    <li>
+                        <a href="/stream"><i class="fa fa-table fa-fw"></i> Live Stream</a>
+                    </li>
+                    {#
                     <li>
                         <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                     </li>
@@ -366,6 +375,7 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    #}
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
@@ -605,6 +615,7 @@
                     </div>
                     <!-- /.panel-body -->
                 </div>
+                {#
                 <!-- /.panel -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -718,6 +729,7 @@
                     <!-- /.panel-body -->
                 </div>
                 <!-- /.panel -->
+                #}
             </div>
             <!-- /.col-lg-8 -->
             <div class="col-lg-4">
@@ -830,7 +842,9 @@
                         </div>
                     </div>
                     <!-- /.panel-heading -->
+                    {#
                     <div class="panel-body">
+
                         <ul class="chat">
                             <li class="left clearfix">
                                     <span class="chat-img pull-left">
@@ -896,6 +910,7 @@
                         </ul>
                     </div>
                     <!-- /.panel-body -->
+                    #}
                     <div class="panel-footer">
                         <div class="input-group">
                             <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
