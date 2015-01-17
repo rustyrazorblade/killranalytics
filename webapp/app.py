@@ -1,11 +1,7 @@
 from flask import Flask, render_template
-from models import RawPageViews
+from models import RawPageViews, connect
 
-from kafka import KafkaClient, SimpleProducer, SimpleConsumer
 
-# To send messages synchronously
-kafka = KafkaClient("localhost:9092")
-producer = SimpleProducer(kafka)
 
 # we're pushing everything into a topic called raw
 from flask.ext.uuid import FlaskUUID
@@ -16,12 +12,18 @@ class ExtendedFlask(Flask):
 app = ExtendedFlask(__name__, static_folder="static", static_url_path="/static", template_folder="templates")
 FlaskUUID(app)
 
+##### ROUTES BELOW HERE ########
+
+
+@app.before_first_request
+def connect_to_cassandra():
+    connect()
+
 
 @app.route("/ka/submit", methods=["POST"])
 def submit_analytics():
     # should put a message into kafka and return asap
     return "OK"
-
 
 @app.route("/")
 def index():

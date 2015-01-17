@@ -1,5 +1,13 @@
 from cqlengine import Model
 from cqlengine.columns import *
+from cqlengine.connection import setup
+from cqlengine.management import create_keyspace
+
+from kafka import KafkaClient, SimpleProducer, SimpleConsumer
+
+# To send messages synchronously
+kafka = KafkaClient("localhost:9092")
+producer = SimpleProducer(kafka)
 
 class User(Model):
     __table_name__ = 'user'
@@ -28,6 +36,19 @@ class RawPageViews(Model):
     # keep the newest stuff first
     view_id = TimeUUID(primary_key=True, clustering_order="DESC")
 
+    @classmethod
+    def push(cls, site_id, data):
+        """
+        we're going to delay our validation of site_id until we pull the data in
+        there's no real point in doing it now, and it means we have to talk to the db
+        we're going to insert & roll these up in spark
+
+        :param site_id:
+        :param data:
+        :return:
+        """
+        pass
+
 
 class HourlyRollupByPage(Model):
     # for a given site & page, what are the stats
@@ -45,3 +66,8 @@ class HourlyRollupBySite(Model):
 
 
 
+def connect():
+    # yay for hard coded....
+    ks = "killranalytics"
+    setup(["localhost"], ks)
+    create_keyspace(ks, "SimpleStrategy", 1)
