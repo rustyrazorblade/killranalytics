@@ -2,7 +2,7 @@ import AssemblyKeys._
 
 assemblySettings
 
-name := "intro_to_spark"
+name := "killranalytics"
 
 version := "1.0"
 

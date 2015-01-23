@@ -1,6 +1,6 @@
 import org.apache.spark.{SparkContext,SparkConf}
 
-//import org.apache.spark.streaming.dstream.{ReceiverInputDStream, DStream}
+import org.apache.spark.streaming.dstream.{ReceiverInputDStream, DStream}
 
 import org.apache.spark.streaming.kafka.KafkaUtils
 

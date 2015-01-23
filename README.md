@@ -23,5 +23,5 @@ To run the spark streaming job that runs the analytics:
 
 ```
 cd spark
-spark-submit --master 'local[2]' --class RawEventProcessing target/scala-2.10/intro_to_spark-assembly-1.0.jar
+spark-submit --master 'local[2]' --class RawEventProcessing target/scala-2.10/killranalytics-assembly-1.0.jar
 ```
