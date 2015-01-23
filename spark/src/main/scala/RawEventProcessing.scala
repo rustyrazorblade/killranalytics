@@ -15,6 +15,10 @@ object RawEventProcessing {
     val conf = new SparkConf().setAppName("Simple Application").set("spark.cassandra.connection.host", "127.0.0.1")
     val sc = new SparkContext(conf)
 
+    // setup streaming context - we want to be pushing data to the client asap
+    val ssc = new StreamingContext(sc, Seconds(1))
+
+
     val rdd = sc.cassandraTable("test", "words")
 
     rdd.collect().toList.foreach(println)
