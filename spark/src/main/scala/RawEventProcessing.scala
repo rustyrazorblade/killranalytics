@@ -19,7 +19,7 @@ object RawEventProcessing {
 
     // kafka topic raw events will be published to
     val topic = "test"
-    
+
     // setup streaming context - we want to be pushing data to the client asap
     val ssc = new StreamingContext(sc, Seconds(1))
 
@@ -30,10 +30,13 @@ object RawEventProcessing {
 
     val rawEvents: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Map(topic -> 1), StorageLevel.MEMORY_ONLY)
 
+    rawEvents.print()
 
-    val rdd = sc.cassandraTable("test", "words")
+//    rawEvents.saveToCassandra("events", "customer_events")
 
-    rdd.collect().toList.foreach(println)
+
+    ssc.start()
+    ssc.awaitTermination()
 
   }
 }
