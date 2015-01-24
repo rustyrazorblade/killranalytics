@@ -28,6 +28,18 @@ object RawEventProcessing {
       "group.id" -> "consumer-spark",
       "auto.offset.reset" -> "smallest")
 
+    /*
+    my best understanding of the following code is as follows:
+
+    createStream[] is a generic.  the stuff between [] is the typing
+    the args that follow coorespond to this:
+
+      streaming context
+      kafka configuration params (see the map above)
+      map of topic_name -> numPartitions to consume
+      storageLevel: we're using in memory only because we're throwing away the data so quickly
+     */
+
     val rawEvents: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Map(topic -> 1), StorageLevel.MEMORY_ONLY)
 
     rawEvents.print()
