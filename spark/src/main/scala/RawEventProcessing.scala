@@ -8,6 +8,8 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 import kafka.serializer.StringDecoder
 import org.apache.spark.storage.StorageLevel
 
+import scala.util.parsing.json.JSON
+
 import com.datastax.spark.connector._
 
 object RawEventProcessing {
@@ -42,7 +44,9 @@ object RawEventProcessing {
 
     val rawEvents: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Map(topic -> 1), StorageLevel.MEMORY_ONLY)
 
-    rawEvents.print()
+    val windowedStream = rawEvents.window(Seconds(2), Seconds(2))
+
+    windowedStream.print()
 
 //    rawEvents.saveToCassandra("events", "customer_events")
 
