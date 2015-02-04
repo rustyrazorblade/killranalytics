@@ -16,3 +16,11 @@ libraryDependencies += "org.apache.spark" %% "spark-streaming" % "1.2.0" % "prov
 
 libraryDependencies += "org.apache.spark" %% "spark-streaming-kafka" % "1.2.0"
 
+val json4sVersion = "3.2.11"
+
+//libraryDependencies += "org.json4s" %% "json4s-native" % json4sVersion
+
+libraryDependencies += "org.json4s" %% "json4s-jackson" % json4sVersion
+
+libraryDependencies += "org.json4s" %% "json4s-ext" % json4sVersion
+
