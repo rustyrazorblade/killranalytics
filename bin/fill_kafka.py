@@ -11,10 +11,13 @@ import random
 
 # collect metrics for 10 sites
 sites = [str(uuid4()) for x in range(10)]
+pages = ["/index.html", "/archive.php", "/whatever.js"]
+
 for x in range(1000):
 
     message = {"site_id":       random.choice(sites),
-               "pageview_id":   str(uuid1()) }
+               "pageview_id":   str(uuid1()),
+               "page":          random.choice(pages) }
 
     producer.send_messages("pageviews", json.dumps(message))
     print message
