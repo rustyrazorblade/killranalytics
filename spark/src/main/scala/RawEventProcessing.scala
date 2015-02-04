@@ -81,6 +81,8 @@ object RawEventProcessing {
 
     parsed.saveToCassandra("killranalytics", "pageviews")
 
+    // roll up into per
+
 
     ssc.start()
     ssc.awaitTermination()

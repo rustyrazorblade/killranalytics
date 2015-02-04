@@ -27,14 +27,14 @@ class Page(Model):
     page_id = Text(primary_key=True)
 
 
-class RawPageViews(Model):
+class PageViews(Model):
     # for a given page on a site
-    __table_name__ = 'raw_page_views'
+    __table_name__ = 'pageviews'
     site_id = UUID(primary_key=True, partition_key=True)
-    page_id = Text(primary_key=True, partition_key=True)
+    pageview_id = TimeUUID(primary_key=True, clustering_order="DESC")
+    page = Text()
 
     # keep the newest stuff first
-    view_id = TimeUUID(primary_key=True, clustering_order="DESC")
 
     @classmethod
     def push(cls, site_id, data):

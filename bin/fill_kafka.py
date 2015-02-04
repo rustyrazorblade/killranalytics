@@ -11,7 +11,7 @@ import random
 
 # collect metrics for 10 sites
 sites = [str(uuid4()) for x in range(10)]
-pages = ["/index.html", "/archive.php", "/whatever.js"]
+pages = ["/index.html", "/archive.php", "/whatever.js", "/something.css"]
 
 for x in range(1000):
 
