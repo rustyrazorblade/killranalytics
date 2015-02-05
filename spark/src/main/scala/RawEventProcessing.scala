@@ -21,6 +21,7 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization._
 
 case class PageView(site_id: String, pageview_id: String, page: Option[String])
+case class HourlyPageView
 
 object RawEventProcessing {
 

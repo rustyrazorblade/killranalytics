@@ -36,6 +36,9 @@ class PageViews(Model):
     site_id = UUID(primary_key=True, partition_key=True)
     pageview_id = TimeUUID(primary_key=True, clustering_order="DESC")
     page = Text()
+    os = Text()
+    browser = Text()
+    referral = Text()
 
     # keep the newest stuff first
 
@@ -53,19 +56,19 @@ class PageViews(Model):
         pass
 
 
-class DailyRollupBySiteModel):
+class DailyRollupBySite(Model):
     # for a given site & page, what are the stats
     # sparse table - no data, no entry
     # contains 1 hour of data, bucketed into seconds, so up to 3600 records
     __table_name__ = "minute_rollup_by_site"
     site_id = UUID(primary_key=True, partition_key=True)
+    day = Date(primary_key=True)
 
-
-class HourlyRollupBySite(Model):
-    __table_name__ = "minute_rollup_by_site"
-    site_id = UUID(primary_key=True, partition_key=True)
-    day = Date(primary_key=True, partition_key=True)
-    hour = Integer(primary_key=True)
+    pageview_id = TimeUUID(primary_key=True, clustering_order="DESC")
+    page = Text()
+    os = Text()
+    browser = Text()
+    referral = Text()
 
 
 
