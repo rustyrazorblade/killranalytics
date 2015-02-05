@@ -30,6 +30,9 @@ class Page(Model):
 class PageViews(Model):
     # for a given page on a site
     __table_name__ = 'pageviews'
+    __default_time_to_live__ = 3600 * 24 # just a day?
+    __compaction__ = "DateTieredCompactionStrategy"
+
     site_id = UUID(primary_key=True, partition_key=True)
     pageview_id = TimeUUID(primary_key=True, clustering_order="DESC")
     page = Text()
@@ -50,7 +53,7 @@ class PageViews(Model):
         pass
 
 
-class HourlyRollupByPage(Model):
+class DailyRollupBySiteModel):
     # for a given site & page, what are the stats
     # sparse table - no data, no entry
     # contains 1 hour of data, bucketed into seconds, so up to 3600 records
