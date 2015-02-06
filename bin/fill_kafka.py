@@ -1,24 +1,20 @@
-from kafka import KafkaClient, SimpleProducer, SimpleConsumer
-
-# To send messages synchronously
-kafka = KafkaClient("localhost:9092")
-producer = SimpleProducer(kafka)
+from sys import path
+path.append("")
 
 import time
 import json
-from uuid import uuid4, uuid1
+from uuid import uuid4
 import random
+
+
+from webapp.models import PageViews
 
 # collect metrics for 10 sites
 sites = [str(uuid4()) for x in range(10)]
 pages = ["/index.html", "/archive.php", "/whatever.js", "/something.css"]
 
-for x in range(1000):
-
-    message = {"site_id":       random.choice(sites),
-               "pageview_id":   str(uuid1()),
-               "page":          random.choice(pages) }
-
-    producer.send_messages("pageviews", json.dumps(message))
-    print message
+for x in range(100):
+    print PageViews.create(random.choice(sites),
+                           random.choice(pages),
+                           None)
     time.sleep(.2)

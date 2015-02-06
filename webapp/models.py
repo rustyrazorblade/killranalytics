@@ -1,13 +1,20 @@
+# built ins
+from uuid import uuid1
+import json
+
+# cqlengine
 from cqlengine import Model
 from cqlengine.columns import *
-from cqlengine.connection import setup
-from cqlengine.management import create_keyspace
 
-from kafka import KafkaClient, SimpleProducer, SimpleConsumer
-
+from db import connect_cassandra, connect_kafka
 # To send messages synchronously
-kafka = KafkaClient("localhost:9092")
+
+from kafka import SimpleProducer
+
+connect_cassandra()
+kafka = connect_kafka()
 producer = SimpleProducer(kafka)
+
 
 class User(Model):
     __table_name__ = 'user'
@@ -34,7 +41,7 @@ class PageViews(Model):
     __compaction__ = "DateTieredCompactionStrategy"
 
     site_id = UUID(primary_key=True, partition_key=True)
-    pageview_id = TimeUUID(primary_key=True, clustering_order="DESC")
+    pageview_id = TimeUUID(primary_key=True, clustering_order="DESC", default=uuid1)
     page = Text()
     os = Text()
     browser = Text()
@@ -43,17 +50,24 @@ class PageViews(Model):
     # keep the newest stuff first
 
     @classmethod
-    def push(cls, site_id, data):
+    def create(cls, site_id, page, payload):
         """
         we're going to delay our validation of site_id until we pull the data in
         there's no real point in doing it now, and it means we have to talk to the db
         we're going to insert & roll these up in spark
 
         :param site_id:
-        :param data:
+        :param payload:
         :return:
         """
-        pass
+        result = super(PageViews, cls).create(site_id=site_id, page=page)
+
+        message = {"site_id": site_id,
+                   "page": page }
+
+        producer.send_messages("pageviews", json.dumps(message))
+
+        return result
 
 
 class DailyRollupBySite(Model):
@@ -74,8 +88,4 @@ class DailyRollupBySite(Model):
 
 
 
-def connect():
-    # yay for hard coded....
-    ks = "killranalytics"
-    setup(["localhost"], ks)
-    create_keyspace(ks, "SimpleStrategy", 1)
+

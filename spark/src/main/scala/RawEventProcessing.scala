@@ -90,7 +90,7 @@ object RawEventProcessing {
 
     parsed.print()
 
-    parsed.saveToCassandra("killranalytics", "pageviews")
+    //parsed.saveToCassandra("killranalytics", "pageviews")
 
 
     //case class HourlyPageViews()

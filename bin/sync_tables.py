@@ -3,9 +3,10 @@ path.append(".")
 
 from cqlengine.management import sync_table
 
-from webapp.models import connect, PageViews
+from webapp.models import connect_cassandra, connect_kafka, PageViews
 
-connect()
+connect_cassandra()
+
 sync_table(PageViews)
 
 

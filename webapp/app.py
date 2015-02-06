@@ -1,6 +1,5 @@
 from flask import Flask, render_template
-from models import RawPageViews, connect
-
+from models import PageViews, connect_cassandra, connect_kafka
 
 
 # we're pushing everything into a topic called raw
@@ -16,13 +15,15 @@ FlaskUUID(app)
 
 
 @app.before_first_request
-def connect_to_cassandra():
-    connect()
+def connect_to_db():
+    connect_cassandra()
+    connect_kafka()
 
 
 @app.route("/ka/submit", methods=["POST"])
 def submit_analytics():
     # should put a message into kafka and return asap
+    PageViews.create()
     return "OK"
 
 @app.route("/")
