@@ -23,7 +23,7 @@ rate = 1 / per_second
 
 print rate
 
-for x in range(100):
+for x in range(1000):
     print PageViews.create(random.choice(sites),
                            random.choice(pages),
                            None)

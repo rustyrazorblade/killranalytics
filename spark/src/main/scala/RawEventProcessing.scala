@@ -94,14 +94,13 @@ object RawEventProcessing {
     // val pairs = words.map(word => (word, 1))
     // val wordCounts = pairs.reduceByKey(_ + _)
     val pairs = parsed.map(event => (event.site_id, 1))
-    val hits_per_site = pairs.reduceByKey(_ + _)
+    val hits_per_site: DStream[PageViewsPerSite] = pairs.reduceByKey(_+ _).map(
+      x => PageViewsPerSite.tupled(x)
+    )
 
     hits_per_site.print()
 
-    parsed.print()
-
     //parsed.saveToCassandra("killranalytics", "pageviews")
-
 
     //case class HourlyPageViews()
     // roll up into per
