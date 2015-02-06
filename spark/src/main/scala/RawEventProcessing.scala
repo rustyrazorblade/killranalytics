@@ -8,6 +8,8 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 import kafka.serializer.StringDecoder
 import org.apache.spark.storage.StorageLevel
 
+import org.apache.spark.streaming.StreamingContext._
+
 import scala.util.parsing.json.JSON
 
 import com.datastax.spark.connector._
@@ -22,7 +24,7 @@ import org.json4s.ext.UUIDSerializer
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization._
 
-case class PageView(site_id: String, pageview_id: String, page: Option[String])
+case class PageView(site_id: String, page: Option[String])
 
 object RawEventProcessing {
 
@@ -85,8 +87,16 @@ object RawEventProcessing {
 
     val parsed: DStream[PageView] = rawEvents.map{ case (_,v) =>
       parse(v).extract[PageView]
-    } // return parsed json as RDD, maybe?
+    } // return parsed json as RDD
 
+    case class PageViewsPerSite(site_id:String, pages:Int)
+
+    // val pairs = words.map(word => (word, 1))
+    // val wordCounts = pairs.reduceByKey(_ + _)
+    val pairs = parsed.map(event => (event.site_id, 1))
+    val hits_per_site = pairs.reduceByKey(_ + _)
+
+    hits_per_site.print()
 
     parsed.print()
 
