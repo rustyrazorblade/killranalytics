@@ -13,6 +13,8 @@ import scala.util.parsing.json.JSON
 import com.datastax.spark.connector._
 
 import com.datastax.spark.connector.streaming._
+import java.util.Calendar
+import java.text.SimpleDateFormat
 
 // JSON support
 import org.json4s._
@@ -21,13 +23,11 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization._
 
 case class PageView(site_id: String, pageview_id: String, page: Option[String])
-case class HourlyPageView
 
 object RawEventProcessing {
 
   implicit val formats = DefaultFormats
   def main(args: Array[String]): Unit = {
-
 
     val conf = new SparkConf().setAppName("Simple Application").set("spark.cassandra.connection.host", "127.0.0.1")
     val sc = new SparkContext(conf)
@@ -66,7 +66,16 @@ object RawEventProcessing {
      */
     val rawEvents: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Map(topic -> 1), StorageLevel.MEMORY_ONLY)
 
-
+    // get the current time for cassandra storage
+//    val second_formatter = new SimpleDateFormat("ss")
+//    val minute_formatter = new SimpleDateFormat("mm")
+//
+//    val current_time = Calendar.getInstance.getTime
+//
+//    val current_second = second_formatter.format(current_time)
+//    val current_minute = second_formatter.format(current_time)
+//
+//    println(current_second)
     //val windowedStream = rawEvents.window(Seconds(2), Seconds(2))
 
     //windowedStream.print()
@@ -74,14 +83,17 @@ object RawEventProcessing {
     rawEvents.print()
 
 
-    val parsed: DStream[PageView] = rawEvents.map({ case (k,v) => {
+    val parsed: DStream[PageView] = rawEvents.map{ case (_,v) =>
       parse(v).extract[PageView]
-    }}) // return parsed json as RDD, maybe?
+    } // return parsed json as RDD, maybe?
+
 
     parsed.print()
 
     parsed.saveToCassandra("killranalytics", "pageviews")
 
+
+    //case class HourlyPageViews()
     // roll up into per
 
 
