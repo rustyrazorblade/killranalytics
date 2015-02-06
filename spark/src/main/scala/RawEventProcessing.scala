@@ -15,8 +15,8 @@ import scala.util.parsing.json.JSON
 import com.datastax.spark.connector._
 
 import com.datastax.spark.connector.streaming._
-import java.util.Calendar
-import java.text.SimpleDateFormat
+
+import com.datastax.driver.core.utils.UUIDs
 
 // JSON support
 import org.json4s._
@@ -68,28 +68,11 @@ object RawEventProcessing {
      */
     val rawEvents: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Map(topic -> 1), StorageLevel.MEMORY_ONLY)
 
-    // get the current time for cassandra storage
-//    val second_formatter = new SimpleDateFormat("ss")
-//    val minute_formatter = new SimpleDateFormat("mm")
-//
-//    val current_time = Calendar.getInstance.getTime
-//
-//    val current_second = second_formatter.format(current_time)
-//    val current_minute = second_formatter.format(current_time)
-//
-//    println(current_second)
-    //val windowedStream = rawEvents.window(Seconds(2), Seconds(2))
-
-    //windowedStream.print()
-
-    rawEvents.print()
-
-
     val parsed: DStream[PageView] = rawEvents.map{ case (_,v) =>
       parse(v).extract[PageView]
     } // return parsed json as RDD
 
-    case class PageViewsPerSite(site_id:String, pages:Int)
+    case class PageViewsPerSite(site_id:String, pageviews:Int)
 
     // val pairs = words.map(word => (word, 1))
     // val wordCounts = pairs.reduceByKey(_ + _)
@@ -100,11 +83,10 @@ object RawEventProcessing {
 
     hits_per_site.print()
 
-    //parsed.saveToCassandra("killranalytics", "pageviews")
+    // parsed.saveToCassandra("killranalytics", "pageviews")
 
-    //case class HourlyPageViews()
+    // case class HourlyPageViews()
     // roll up into per
-
 
     ssc.start()
     ssc.awaitTermination()
