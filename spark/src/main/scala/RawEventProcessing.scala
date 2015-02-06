@@ -18,6 +18,8 @@ import com.datastax.spark.connector.streaming._
 
 import com.datastax.driver.core.utils.UUIDs
 
+import java.util.UUID
+
 // JSON support
 import org.json4s._
 import org.json4s.ext.UUIDSerializer
@@ -72,18 +74,22 @@ object RawEventProcessing {
       parse(v).extract[PageView]
     } // return parsed json as RDD
 
-    case class PageViewsPerSite(site_id:String, pageviews:Int)
+    case class PageViewsPerSite(site_id:String, ts:UUID, pageviews:Int)
 
     // val pairs = words.map(word => (word, 1))
     // val wordCounts = pairs.reduceByKey(_ + _)
     val pairs = parsed.map(event => (event.site_id, 1))
+
     val hits_per_site: DStream[PageViewsPerSite] = pairs.reduceByKey(_+ _).map(
-      x => PageViewsPerSite.tupled(x)
+      x => {
+        val (site_id, hits) = x
+        PageViewsPerSite.tupled((site_id, UUIDs.timeBased(), hits))
+
+      }
     )
 
-    hits_per_site.print()
 
-    // parsed.saveToCassandra("killranalytics", "pageviews")
+    hits_per_site.saveToCassandra("killranalytics", "real_time_data")
 
     // case class HourlyPageViews()
     // roll up into per

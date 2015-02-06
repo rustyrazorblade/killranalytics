@@ -75,7 +75,7 @@ class RealTimeData(Model):
     # sparse table - no data, no entry
     # contains 1 day of data, bucketed into seconds, so up to 3600 records
 
-    __table_name__ = "daily_rollup_by_site"
+    __table_name__ = "real_time_data"
     __default_time_to_live__ = 86400
     __compaction__ = "DateTieredCompactionStrategy"
 
