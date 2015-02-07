@@ -83,7 +83,7 @@ object RawEventProcessing {
     val hits_per_site: DStream[PageViewsPerSite] = pairs.reduceByKey(_+ _).map(
       x => {
         val (site_id, hits) = x
-        PageViewsPerSite.tupled((site_id, UUIDs.timeBased(), hits))
+        PageViewsPerSite(site_id, UUIDs.timeBased(), hits)
 
       }
     )
