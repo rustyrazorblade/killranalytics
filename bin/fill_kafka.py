@@ -10,7 +10,7 @@ import random
 from webapp.models import PageViews
 
 # collect metrics for 10 sites
-sites = [str(uuid4()) for x in range(10)]
+sites = [str(uuid4()) for x in range(100)]
 pages = ["/index.html", "/archive.php", "/whatever.js", "/something.css"]
 
 try:
@@ -23,7 +23,7 @@ rate = 1 / per_second
 
 print rate
 
-for x in range(1000):
+for x in range(1000000):
     print PageViews.create(random.choice(sites),
                            random.choice(pages),
                            None)
