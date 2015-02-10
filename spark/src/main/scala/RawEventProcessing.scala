@@ -20,6 +20,11 @@ import com.datastax.driver.core.utils.UUIDs
 
 import java.util.UUID
 
+import java.util.Properties
+
+import kafka.producer._
+
+
 // JSON support
 import org.json4s._
 import org.json4s.ext.UUIDSerializer
@@ -90,6 +95,25 @@ object RawEventProcessing {
 
 
     hits_per_site.saveToCassandra("killranalytics", "real_time_data")
+
+    // now we're going to push our results back into kafka topics in order to show real time results to the end user
+    hits_per_site.foreachRDD { rdd =>
+      val props = new Properties()
+      props.put("metadata.broker.list", List("localhost"))
+      props.put("serializer.class", "kafka.serializer.StringEncoder")
+
+
+      rdd.foreachPartition { p =>
+        val config = new ProducerConfig(props)
+        val producer = new Producer[String, String](config)
+
+        p.foreach { k =>
+          // send kafka messages
+          val k = new KeyedMessage[String, String]("live_updates", "test")
+          producer.send(k)
+        }
+      }
+    }
 
     // case class HourlyPageViews()
     // roll up into per
