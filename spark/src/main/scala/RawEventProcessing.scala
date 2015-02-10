@@ -98,19 +98,19 @@ object RawEventProcessing {
 
     // now we're going to push our results back into kafka topics in order to show real time results to the end user
     hits_per_site.foreachRDD { rdd =>
-      val props = new Properties()
-      props.put("metadata.broker.list", List("localhost"))
-      props.put("serializer.class", "kafka.serializer.StringEncoder")
-
 
       rdd.foreachPartition { p =>
+        val props = new Properties()
+        // commna delimited list, kind of weird.  List() will fail w/ exceptions
+        props.put("metadata.broker.list", "localhost:9092")
+        props.put("serializer.class", "kafka.serializer.StringEncoder")
         val config = new ProducerConfig(props)
         val producer = new Producer[String, String](config)
 
         p.foreach { k =>
           // send kafka messages
-          val k = new KeyedMessage[String, String]("live_updates", "test")
-          producer.send(k)
+          val km = new KeyedMessage[String, String]("live_updates", "test")
+          producer.send(km)
         }
       }
     }
