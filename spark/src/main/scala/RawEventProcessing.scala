@@ -109,7 +109,7 @@ object RawEventProcessing {
 
         p.foreach { k =>
           // send kafka messages
-          val km = new KeyedMessage[String, String]("live_updates", "test")
+          val km = new KeyedMessage[String, String]("live_updates:" + k.site_id, "test")
           producer.send(km)
         }
       }
