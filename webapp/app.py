@@ -33,9 +33,8 @@ def index():
     return render_template("index.tpl")
 
 
-@app.route("/stream")
 @app.route("/stream/<uuid:stream_id>")
-def stream():
+def stream(stream_id):
     return render_template("stream.tpl")
 
 
