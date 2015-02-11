@@ -11,7 +11,7 @@
         var s = new WebSocket("ws://127.0.0.1:8080/stream_ws");
         s.onopen = function() {
             alert("connected !!!");
-            s.send("ciao");
+            s.send("02559c4f-ec20-4579-b2ca-72922a90d0df");
         };
         s.onmessage = function(e) {
             var bb = document.getElementById('blackboard')

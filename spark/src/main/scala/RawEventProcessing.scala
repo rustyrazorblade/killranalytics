@@ -27,6 +27,7 @@ import kafka.producer._
 
 // JSON support
 import org.json4s._
+import org.json4s.JsonDSL._
 import org.json4s.ext.UUIDSerializer
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization._
@@ -36,6 +37,7 @@ case class PageView(site_id: String, page: Option[String])
 object RawEventProcessing {
 
   implicit val formats = DefaultFormats
+
   def main(args: Array[String]): Unit = {
 
     val conf = new SparkConf().setAppName("Simple Application").set("spark.cassandra.connection.host", "127.0.0.1")
@@ -109,7 +111,9 @@ object RawEventProcessing {
 
         p.foreach { k =>
           // send kafka messages
-          val km = new KeyedMessage[String, String]("live_updates:" + k.site_id, "test")
+          val msg = compact(render("hits"))
+
+          val km = new KeyedMessage[String, String]("live_updates." + k.site_id, msg)
           producer.send(km)
         }
       }

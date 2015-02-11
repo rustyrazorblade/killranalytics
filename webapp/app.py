@@ -4,6 +4,7 @@ monkey.patch_all()
 from flask import Flask, render_template
 from models import PageViews, connect_cassandra, connect_kafka
 
+from kafka import SimpleConsumer
 
 # we're pushing everything into a topic called raw
 from flask.ext.uuid import FlaskUUID
@@ -20,9 +21,11 @@ ws = GeventWebSocket(app)
 
 ##### ROUTES BELOW HERE ########
 
+kafka = None
 
 @app.before_first_request
 def connect_to_db():
+    global kafka
     print "Connecting to cassandra"
     try:
         connect_cassandra()
@@ -30,7 +33,7 @@ def connect_to_db():
         print e
 
     print "Connecting to kafka"
-    connect_kafka()
+    kafka = connect_kafka()
     print "done with connecting"
 
 
@@ -61,8 +64,26 @@ def stream(stream_id):
 
 @ws.route("/stream_ws")
 def stream_ws(ws):
-    print "OK"
+    global kafka
+    # get the stream_id we're going to follow
+    msg = ws.receive()
+    topic = "live_updates.{}".format(msg)
 
-#
+    from uuid import uuid4
+
+    kafka = connect_kafka()
+    consumer = SimpleConsumer(kafka, None, topic, auto_commit=False)
+
+    while True:
+        print "Fetching"
+        try:
+            msg = consumer.get_messages()[0].message.value
+            ws.send(msg)
+            print "sent"
+        except Exception as e:
+            print e
+            print "nothing waiting"
+
+
 # if __name__ == "__main__":
 #     app.run(host='localhost', port=8080, debug=True)
