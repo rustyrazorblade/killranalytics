@@ -1,11 +1,12 @@
 uwsgi:
-    http: 127.0.0.1:8001
-    socket: 127.0.0.1:8000
+    http: :8080
+    socket: :8000
     wsgi-file: app.py
     callable: app
-    gevent: 1
+    gevent: 4
     stats: 127.0.0.1:8002
-    async: 4
     master: 1
     virtualenv: $(VIRTUAL_ENV)
+    http-websockets: 1
+    lazy: 1
 
