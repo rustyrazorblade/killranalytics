@@ -28,9 +28,10 @@ import kafka.producer._
 // JSON support
 import org.json4s._
 import org.json4s.JsonDSL._
-import org.json4s.ext.UUIDSerializer
+//import org.json4s.ext.UUIDSerializer
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization._
+
 
 case class PageView(site_id: String, page: Option[String])
 
@@ -95,10 +96,11 @@ object RawEventProcessing {
       }
     )
 
-
     hits_per_site.saveToCassandra("killranalytics", "real_time_data")
 
     // now we're going to push our results back into kafka topics in order to show real time results to the end user
+
+
     hits_per_site.foreachRDD { rdd =>
 
       rdd.foreachPartition { p =>
@@ -111,8 +113,8 @@ object RawEventProcessing {
 
         p.foreach { k =>
           // send kafka messages
-          val msg = compact(render("hits"))
-
+//
+          val msg = compact(render("hits" -> k.pageviews))
           val km = new KeyedMessage[String, String]("live_updates." + k.site_id, msg)
           producer.send(km)
         }
