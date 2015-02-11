@@ -77,9 +77,9 @@ def stream_ws(ws):
     while True:
         print "Fetching"
         try:
-            msg = consumer.get_messages()[0].message.value
+            msg = consumer.get_messages(timeout=.25)[0].message.value
             ws.send(msg)
-            print "sent"
+            print "sent {}".format(msg)
         except Exception as e:
             print e
             print "nothing waiting"
