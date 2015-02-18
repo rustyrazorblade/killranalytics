@@ -7,6 +7,7 @@ from webapp.models import connect_cassandra, PageViews, RealTimeData
 
 connect_cassandra()
 
+ks = 'killranalytics'
 create_keyspace(ks, "SimpleStrategy", 1)
 
 sync_table(PageViews)
