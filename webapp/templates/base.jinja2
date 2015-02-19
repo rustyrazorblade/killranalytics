@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>KillrAnalytics</title>
+    <title>KillrAnalytics {% block title %}{% endblock %} </title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -35,6 +35,8 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    {% block head %}
+    {% endblock %}
 
 </head>
 
@@ -282,7 +284,7 @@
                     </li>
 
                     <li>
-                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                     </li>
 
                     {#
@@ -384,6 +386,8 @@
     </nav>
 
     <div id="page-wrapper">
+    {% block page_wrapper %}
+
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Dashboard</h1>
@@ -928,6 +932,7 @@
             <!-- /.col-lg-4 -->
         </div>
         <!-- /.row -->
+        {% endblock %}
     </div>
     <!-- /#page-wrapper -->
 

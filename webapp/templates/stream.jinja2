@@ -1,16 +1,10 @@
-{#
-
-{%  extends "base.tpl" %}
-
-#}
+{%  extends "base.jinja2" %}
 
 
-<html>
-<head>
+{% block head %}
     <script language="Javascript">
         var s = new WebSocket("ws://127.0.0.1:8080/stream_ws");
         s.onopen = function() {
-            alert("connected !!!");
             s.send("02559c4f-ec20-4579-b2ca-72922a90d0df");
         };
         s.onmessage = function(e) {
@@ -24,7 +18,7 @@
         }
 
         s.onclose = function(e) {
-            alert("connection closed");
+            bb.innerHTML = html + '<br/>' + "connection closed";
         }
 
         function invia() {
@@ -32,12 +26,13 @@
             s.send(value);
         }
     </script>
-</head>
-<body>
-<h1>WebSocket</h1>
-<input type="text" id="testo"/>
-<input type="button" value="invia" onClick="invia();"/>
+{% endblock %}
+
+{% block page_wrapper %}
+
 <div id="blackboard" style="width:640px;height:480px;background-color:black;color:white;border: solid 2px red;overflow:auto">
+
 </div>
-</body>
-</html>
+
+{%  endblock %}
+

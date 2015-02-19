@@ -48,13 +48,14 @@ def submit_analytics():
 def index():
     # shows the dashboard
     # if the user is not logged in, kick them to the login page
-    return render_template("index.tpl")
+    return render_template("index.jinja2")
 
 
 
+@app.route("/stream")
 @app.route("/stream/<uuid:stream_id>")
-def stream(stream_id):
-    return render_template("stream.tpl")
+def stream(stream_id=None):
+    return render_template("stream.jinja2")
 
 #
 # @app.route("/login")
