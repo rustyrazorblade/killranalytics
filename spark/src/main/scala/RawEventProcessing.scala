@@ -118,7 +118,7 @@ object RawEventProcessing {
           val km = new KeyedMessage[String, String]("live_updates." + k.site_id, msg)
           producer.send(km)
         }
-        
+
       }
     }
 
