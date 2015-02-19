@@ -62,6 +62,10 @@ def stream(stream_id=None):
 # def login():
 #     return render_template("login.tpl")
 
+@app.route("/help")
+def help():
+    return render_template("help.jinja2")
+
 
 @ws.route("/stream_ws")
 def stream_ws(ws):

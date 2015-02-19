@@ -2,34 +2,104 @@
 
 
 {% block head %}
+
     <script language="Javascript">
-        var s = new WebSocket("ws://127.0.0.1:8080/stream_ws");
-        s.onopen = function() {
-            s.send("02559c4f-ec20-4579-b2ca-72922a90d0df");
-        };
-        s.onmessage = function(e) {
-            data = $.parseJSON(e.data)
-            var bb = document.getElementById('blackboard')
-            var html = bb.innerHTML;
-            bb.innerHTML = html + '<br/>' + data;
-        };
+        $(function() {
+            var page_views = [];
 
-        s.onerror = function(e) {
-            console.log(e);
-        }
+            var plot = $.plot("#pageview_chart", [[[0,0]]], {
+                series: {
+                    shadowSize: 0	// Drawing is faster without shadows
+                },
+                yaxis: {
+                    min: 0,
+                    max: 10,
+                },
+                xaxis: {
+                    show: false,
+                    min:0,
+                    max:20
 
-        s.onclose = function(e) {
-            bb.innerHTML = html + '<br/>' + "connection closed";
-        }
+                }
+            });
+
+            var s = new WebSocket("ws://127.0.0.1:8080/stream_ws");
+
+            s.onopen = function () {
+                s.send("02559c4f-ec20-4579-b2ca-72922a90d0df");
+            };
+
+            s.onmessage = function (e) {
+                data = $.parseJSON(e.data);
+
+                page_views.push(data.hits)
+
+                // only keep the last 20 items
+                l = page_views.length
+                if (l > 20) {
+                    page_views = page_views.slice(l-20)
+                }
+                blah = page_views.map(function (d,i) { return [i,d]})
+
+                console.log(blah)
+
+                plot.setData([blah])
+                plot.draw();
+
+            };
+
+            s.onerror = function (e) {
+                //console.log(e);
+            }
+
+            s.onclose = function (e) {
+                //bb.innerHTML = html + '<br/>' + "connection closed";
+            }
+        })
+
 
     </script>
+
+    <style>
+        .pageview-container {
+            box-sizing: border-box;
+            width: 850px;
+            height: 450px;
+            padding: 20px 15px 15px 15px;
+            margin: 15px auto 30px auto;
+            border: 1px solid #ddd;
+            background: #fff;
+            background: linear-gradient(#f6f6f6 0, #fff 50px);
+            background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
+            background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
+            background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
+            background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            -o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+    </style>
+
+
 {% endblock %}
 
 {% block page_wrapper %}
 
-<div id="blackboard" style="width:640px;height:480px;background-color:black;color:white;border: solid 2px red;overflow:auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
+        </div>
+        <div class="panel-body">
 
-</div>
+            <div class="pageview-container">
+                <div id="pageview_chart" style="width:800px;height:400px"></div>
+            </div>
+        </div>
+    </div>
+
 
 {%  endblock %}
 
