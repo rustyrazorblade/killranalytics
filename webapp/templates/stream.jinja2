@@ -8,9 +8,10 @@
             s.send("02559c4f-ec20-4579-b2ca-72922a90d0df");
         };
         s.onmessage = function(e) {
+            data = $.parseJSON(e.data)
             var bb = document.getElementById('blackboard')
             var html = bb.innerHTML;
-            bb.innerHTML = html + '<br/>' + e.data;
+            bb.innerHTML = html + '<br/>' + data;
         };
 
         s.onerror = function(e) {
@@ -21,10 +22,6 @@
             bb.innerHTML = html + '<br/>' + "connection closed";
         }
 
-        function invia() {
-            var value = document.getElementById('testo').value;
-            s.send(value);
-        }
     </script>
 {% endblock %}
 
