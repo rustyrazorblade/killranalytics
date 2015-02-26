@@ -6,10 +6,14 @@
 Welcome to KillrAnalytics's documentation!
 ==========================================
 
+KillrAnalytics is a project designed to showcase integration of Cassandra and Spark.
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   spark
 
 
 
