@@ -32,7 +32,7 @@ parsed = kafka_stream.map(lambda (k, v): json.loads(v))
 
 # aggregate page views by site
 summed = parsed.map(lambda event: (event['site_id'], 1)).reduceByKey(lambda x,y: x + y)
-summed.pprint()
+summed.saveToCassandra("killranalytics", "real_time_data")
 
 stream.start()
 stream.awaitTermination()
