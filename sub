@@ -1,0 +1,7 @@
+spark-submit \
+    --jars /Users/jhaddad/dev/pyspark-cassandra/target/pyspark_cassandra-0.1.3.jar  \
+    --driver-class-path /Users/jhaddad/dev/pyspark-cassandra/target/pyspark_cassandra-0.1.3.jar \
+    --py-files  /Users/jhaddad/dev/pyspark-cassandra/target/pyspark_cassandra-0.1.3-py2.7.egg \
+    --conf spark.cassandra.connection.host=127.0.0.1 \
+    --master spark://127.0.0.1:7077 \
+    $1
