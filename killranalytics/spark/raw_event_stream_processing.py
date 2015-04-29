@@ -28,9 +28,11 @@ kafka_stream = KafkaUtils.createStream(stream, \
 kafka_stream.pprint()
 
 # (None, u'{"site_id": "02559c4f-ec20-4579-b2ca-72922a90d0df", "page": "/something.css"}')
-parsed = kafka_stream.map(lambda (k,v): json.loads(v))
+parsed = kafka_stream.map(lambda (k, v): json.loads(v))
 
-parsed.pprint()
+# aggregate page views by site
+summed = parsed.map(lambda event: (event['site_id'], 1)).reduceByKey(lambda x,y: x + y)
+summed.pprint()
 
 stream.start()
 stream.awaitTermination()
