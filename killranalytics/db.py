@@ -1,7 +1,7 @@
 from logging import getLogger
 
-from cqlengine.connection import setup
-from cqlengine.management import create_keyspace
+from cassandra.cqlengine.connection import setup
+from cassandra.cqlengine.management import create_keyspace
 
 # kafka
 from kafka import KafkaClient, SimpleProducer, SimpleConsumer

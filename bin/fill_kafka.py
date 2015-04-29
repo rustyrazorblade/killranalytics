@@ -7,7 +7,7 @@ from uuid import uuid4
 import random
 
 
-from webapp.models import PageViews
+from killranalytics.models import PageViews
 
 # collect metrics for 10 sites
 sites = ["02559c4f-ec20-4579-b2ca-72922a90d0df"] # + [str(uuid4()) for x in range(100)]

@@ -1,9 +1,9 @@
 from sys import path
 path.append(".")
 
-from cqlengine.management import sync_table, create_keyspace
+from cassandra.cqlengine.management import sync_table, create_keyspace
 
-from webapp.models import connect_cassandra, PageViews, RealTimeData
+from killranalytics.models import connect_cassandra, PageViews, RealTimeData
 
 connect_cassandra()
 

@@ -4,8 +4,6 @@ monkey.patch_all()
 from flask import Flask, render_template
 from models import PageViews, connect_cassandra, connect_kafka
 
-from kafka import SimpleConsumer
-
 # we're pushing everything into a topic called raw
 from flask.ext.uuid import FlaskUUID
 
@@ -14,10 +12,6 @@ class ExtendedFlask(Flask):
 
 app = ExtendedFlask(__name__, static_folder="static", static_url_path="/static", template_folder="templates")
 FlaskUUID(app)
-
-from flask.ext.uwsgi_websocket import GeventWebSocket
-ws = GeventWebSocket(app)
-
 
 ##### ROUTES BELOW HERE ########
 
@@ -50,12 +44,6 @@ def index():
     # if the user is not logged in, kick them to the login page
     return render_template("index.jinja2")
 
-
-
-@app.route("/stream")
-@app.route("/stream/<uuid:stream_id>")
-def stream(stream_id=None):
-    return render_template("stream.jinja2")
 
 #
 # @app.route("/login")

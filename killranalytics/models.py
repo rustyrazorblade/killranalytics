@@ -3,8 +3,8 @@ from uuid import uuid1
 import json
 
 # cqlengine
-from cqlengine import Model
-from cqlengine.columns import *
+from cassandra.cqlengine.models import Model
+from cassandra.cqlengine.columns import *
 
 from db import connect_cassandra, connect_kafka
 # To send messages synchronously
