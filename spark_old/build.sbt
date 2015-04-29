@@ -24,3 +24,4 @@ libraryDependencies += "org.json4s" %% "json4s-jackson" % json4sVersion
 
 libraryDependencies += "org.json4s" %% "json4s-ext" % json4sVersion
 
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
