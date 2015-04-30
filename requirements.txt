@@ -1,9 +1,8 @@
 Flask==0.10.1
-kafka-python==0.9.2
+kafka-python==0.9.3
 Flask-UUID
 gevent
 uwsgi
-Flask-uWSGI-WebSocket
 sphinx
 
 

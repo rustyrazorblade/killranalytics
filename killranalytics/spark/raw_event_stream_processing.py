@@ -19,12 +19,10 @@ sc = CassandraSparkContext(conf=conf)
 sql = SQLContext(sc)
 stream = StreamingContext(sc, 1) # 1 second window
 
-topic = "pageviews"
-
 kafka_stream = KafkaUtils.createStream(stream, \
                                        "localhost:2181", \
                                        "raw-event-streaming-consumer",
-                                        {topic:1})
+                                        {"pageviews":1})
 
 # (None, u'{"site_id": "02559c4f-ec20-4579-b2ca-72922a90d0df", "page": "/something.css"}')
 parsed = kafka_stream.map(lambda (k, v): json.loads(v))
@@ -36,6 +34,12 @@ summed = parsed.map(lambda event: (event['site_id'], 1)).\
 
 summed.pprint()
 summed.saveToCassandra("killranalytics", "real_time_data")
+
+# send the results back through kafka
+def push_aggregates_to_kafka(rdd):
+    pass
+
+summed.foreachRDD(push_aggregates_to_kafka)
 
 stream.start()
 stream.awaitTermination()
