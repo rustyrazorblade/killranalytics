@@ -23,6 +23,23 @@ class DrawState(object):
     def draw_hits_graph(self):
         pass
 
+    def draw_stats_top_view(self):
+        """
+        draws stats to terminal in a top-style view
+
+        grouped by stat?
+
+        pages     hits
+            blah  50
+            blah2 100
+
+        OS
+            whatever
+
+        :return:
+        """
+        pass
+
 
 
 def main():
