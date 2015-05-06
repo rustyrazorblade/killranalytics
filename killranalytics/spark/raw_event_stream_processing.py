@@ -1,4 +1,6 @@
 import pyspark_cassandra
+import pyspark_cassandra.streaming
+
 from pyspark_cassandra import CassandraSparkContext
 
 from pyspark.sql import SQLContext
@@ -35,12 +37,11 @@ summed = parsed.map(lambda event: (event['site_id'], 1)).\
 summed.pprint()
 summed.saveToCassandra("killranalytics", "real_time_data")
 
-# send the results back through kafka
-def push_aggregates_to_kafka(rdd):
-    pass
-
-summed.foreachRDD(push_aggregates_to_kafka)
+# # send the results back through kafka
+# def push_aggregates_to_kafka(rdd):
+#     pass
+#
+# summed.foreachRDD(push_aggregates_to_kafka)
 
 stream.start()
 stream.awaitTermination()
-
