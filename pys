@@ -1,0 +1,10 @@
+PYSPARK_ROOT=/Users/jhaddad/dev/pyspark-cassandra/target
+export PYSPARK_DRIVER_PYTHON=ipython PYSPARK_DRIVER_PYTHON_OPTS="notebook"
+
+pyspark \
+    --jars ${PYSPARK_ROOT}/pyspark_cassandra-0.1.4.jar  \
+    --driver-class-path ${PYSPARK_ROOT}/pyspark_cassandra-0.1.4.jar \
+    --py-files ${PYSPARK_ROOT}/pyspark_cassandra-0.1.4-py2.7.egg \
+    --conf spark.cassandra.connection.host=127.0.0.1 \
+    --master spark://127.0.0.1:7077 \
+    
