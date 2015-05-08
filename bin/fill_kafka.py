@@ -23,8 +23,11 @@ rate = 1 / per_second
 
 print rate
 
-for x in range(1000000):
-    print PageViews.create(random.choice(sites),
-                           random.choice(pages),
-                           None)
+fp = open("kafka.txt", 'w')
+for x in range(10000):
+
+    site_id = random.choice(sites)
+    page = random.choice(pages)
+    print PageViews.create(site_id, page, None)
+    fp.write(json.dumps({"site_id":site_id, "page":page}) + "\n")
     time.sleep(rate)

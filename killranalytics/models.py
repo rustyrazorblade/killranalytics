@@ -81,12 +81,9 @@ class RealTimeData(Model):
 
     site_id = UUID(primary_key=True, partition_key=True)
     ts = TimeUUID(primary_key=True)
+    page = Text()
     pageviews = Integer()
 
     # os = Text()
     # browser = Text()
     # referral = Text()
-
-
-
-

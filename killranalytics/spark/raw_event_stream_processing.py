@@ -29,13 +29,22 @@ kafka_stream = KafkaUtils.createStream(stream, \
 # (None, u'{"site_id": "02559c4f-ec20-4579-b2ca-72922a90d0df", "page": "/something.css"}')
 parsed = kafka_stream.map(lambda (k, v): json.loads(v))
 
-# aggregate page views by site
-summed = parsed.map(lambda event: (event['site_id'], 1)).\
-                reduceByKey(lambda x,y: x + y).\
-                map(lambda x: {"site_id": x[0], "ts": str(uuid1()), "pageviews": x[1]})
+# # aggregate page views by site
+# summed = parsed.map(lambda event: (event['site_id'], 1)).\
+#                 reduceByKey(lambda x,y: x + y).\
+#                 map(lambda x: {"site_id": x[0], "ts": str(uuid1()), "pageviews": x[1]})
+#
+# summed.pprint()
+# summed.saveToCassandra("killranalytics", "real_time_data")
 
-summed.pprint()
-summed.saveToCassandra("killranalytics", "real_time_data")
+per_page = parsed.map(lambda event: ((event['site_id'], event['page']), 1) ).\
+            reduceByKey(lambda x,y: x + y).\
+            map(lambda x: {"site_id": x[0][0],
+                           "page": x[0][1],
+                           "ts": str(uuid1()),
+                           "pageviews": x[1]})
+
+per_page.saveToCassandra("killranalytics", "real_time_data")
 
 stream.start()
 stream.awaitTermination()
